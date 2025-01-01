@@ -1,2 +1,2 @@
 # Jinquilivuscript
-jinquilivu's epic script real (for washiez)
+jinquilivus' epic script real (for washiez and bloxton)
